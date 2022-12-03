@@ -50,7 +50,6 @@ container basics_understanding_units_result
 	container Geography // Define the extend of the scene and the projection 
 	{
 		unit<fpoint> rdc_base : format = "EPSG:28992", DialogData = "ngr_layer";               // Rijksdriehoekstelsel, a 2D cartesian coordinate system for the netherlands
-
 		unit<fpoint> rdc_meter      := range(rdc_base, point(0f, 300000f), point(280000f, 625000f)); // Define a 2D range consisting of 2D cartesian coordinates, later used for the "province" domain unit geometry attribute
 		unit<fpoint> rdc      := Geography/rdc_meter;
 
@@ -155,20 +154,49 @@ container NLgrid_noswap
 		}
 	}
 
+
 	container SourceData: Using = "Units"
 	{
 
+		#include <ReadmultiRDF.dms>
 
-		unit<uint32> gem2                                // Domain unit province, dimensions and attributes allocated based on the "provincie.shp" file:
+		unit<uint32> pv24                                // Domain unit province, dimensions and attributes allocated based on the "provincie.shp" file:
+		:	StorageName     = "%ProjDir%/dnload2211/Rudifun_PV24_Flevoland/Rudifun_PV24_Flevoland/Rudifun_Netto_Buurt_PV24.shp" // Path to shapefile (2D spatial dataset + N attributes)
+		,	StorageType     = "gdal.vect"                    // Type of file to read
+		,	StorageReadOnly = "True"                         // We will not be editting the underlying shapefile
+		{
+
+			attribute<Geography/rdc> geometry (poly);        // Obtained from the "Rudifun_Netto_Gemeente_PV26.shp" geometry
+			attribute<string>        label := BU_CODE;
+		}
+		
+		unit<uint32> pv25                                // Domain unit province, dimensions and attributes allocated based on the "provincie.shp" file:
+		:	StorageName     = "%ProjDir%/dnload2211/Rudifun_PV25_Gelderland/Rudifun_PV25_Gelderland/Rudifun_Netto_Buurt_PV25.shp" // Path to shapefile (2D spatial dataset + N attributes)
+		,	StorageType     = "gdal.vect"                    // Type of file to read
+		,	StorageReadOnly = "True"                         // We will not be editting the underlying shapefile
+		{
+
+			attribute<Geography/rdc> geometry (poly);        // Obtained from the "Rudifun_Netto_Gemeente_PV26.shp" geometry
+			attribute<string>        label := BU_CODE;
+		}		
+		
+		unit<uint32> pv26                                // Domain unit province, dimensions and attributes allocated based on the "provincie.shp" file:
 		:	StorageName     = "%ProjDir%/dnload2211/Rudifun_PV26_Utrecht/Rudifun_PV26_Utrecht/Rudifun_Netto_Buurt_PV26.shp" // Path to shapefile (2D spatial dataset + N attributes)
 		,	StorageType     = "gdal.vect"                    // Type of file to read
 		,	StorageReadOnly = "True"                         // We will not be editting the underlying shapefile
 		{
 
 			attribute<Geography/rdc> geometry (poly);        // Obtained from the "Rudifun_Netto_Gemeente_PV26.shp" geometry
-			attribute<string>        naam;                   // Obtained from "Rudifun_Netto_Gemeente_PV26.dbf [NAAM]"
 			attribute<string>        label := BU_CODE;
-		}
+		}		
+		
+//		unit<uint32> gem2  := union_unit(pv24,pv25,pv26) {
+//		    attribute<string> label := union_data(., pv24/label,pv25/label,pv26/label); 
+//		}
+
+		//unit<uint32> gem2  := pv26;
+		unit<uint32> gem2  := Merge/bestand_selectie/shp_attribuut/att;
+
 	}
 
 	container Results: Using = "Units"
@@ -200,7 +228,12 @@ container NLgrid_noswap
             parameter<ratio>      AVG_MXI22   := float64(sum(O_MXI22T) / sum(O_MXI22N));
 			attribute<ratio>           C_MXI22       (SourceData/gem2)  := float64(O_MXI22T / O_MXI22N );
 			attribute<ratio>           C_MXI22diff   (SourceData/gem2)  := float64(SourceData/gem2/MXI_22) - C_MXI22;
-
+			unit<uint32> Prov := unique(SourceData/gem2/PV_NAAM){
+			attribute<uint32> Prov_rel (SourceData/gem2) := rlookup(SourceData/gem2/PV_NAAM, Prov/Values);
+            attribute<m2>      PV_MXI22T  (Prov) := sum(O_MXI22T,Prov_rel) ;
+			attribute<m2>      PV_MXI22N (Prov) := sum(O_MXI22N,Prov_rel) ;
+            attribute<ratio>           PV_MXI22       (Prov)  := float64(PV_MXI22T / PV_MXI22N );                              			 
+            }
         }
 		
 
@@ -247,7 +280,7 @@ container NLgrid_noswap
              attribute<m2>      S_MXI22N  (NLgrid/rdc_100m) := float64(potential( float32(Results/ingrid/G_MXI22N),
 			              float32(kernelfiets/pot50km/AbsWeight)) );						  
 			
-			 attribute<ratio>      S_MXI22   (NLgrid/rdc_100m) :=  S_MXI22T / S_MXI22N;
+			 attribute<ratio>      S_MXI22   (NLgrid/rdc_100m) :=  iif(S_MXI22N >10000.0, S_MXI22T / S_MXI22N,1.0/0.0);
 
 			 
 

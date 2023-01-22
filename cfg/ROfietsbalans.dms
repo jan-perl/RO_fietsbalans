@@ -4,184 +4,73 @@
 // buurprovincies ??
 // oppervlak vs arbeidsplaatsen
 
-
-
 container ROfietsbalans
 {
+    #include <Classifications.dms> 
+    #include <Units.dms> 
 
-container Classifications: Using = "Units", KeepData = "True", IsHidden = "True"
-{
-// =========  Classificaties voor Percentages
-	unit<uint8> Percentage13K: nrofrows = 13
-	{
-		attribute<percent> ClassBreaks: DialogType = "Classification",
-			[0,10,20,30,40,50,60,70,80,90,100,120,150];
-
-		attribute<uint32> BrushColor : DialogType = "BrushColor",
-			[
-				 rgb(255,255,255),rgb(255,229,204),rgb(255,204,153)
-				,rgb(255,178,102),rgb(255,153, 51),rgb(255,128,  0)
-				,rgb(223, 96, 32),rgb(191, 64, 64),rgb(180,  0,  0)
-				,rgb(120,  0,  0),rgb( 60,  0,  0),rgb(120,  0,128),rgb(255,  0,200)
-			];
-
-		attribute<string> label : DialogType = "LabelText",
-			[' 0 -  10','10 -  20','20 -  30','30 -  40','40 -  50','50 -  60','60 -  70','70 -  80','80 -  90','90 - 100','100- 120','120- 150','150- 200'];
-	}
-
-	unit<uint8> Ratio13F: nrofrows = 12
-	{
-		attribute<ratio> ClassBreaks: DialogType = "Classification",
-			[0,.2,.3,.4,.5,.55,.6,.65,.7,.75,.8,.9];
-
-		attribute<uint32> BrushColor : DialogType = "BrushColor",
-			[
-				rgb(255,229,204),rgb(255,204,153)
-				,rgb(255,178,102),rgb(255,153, 51),rgb(255,128,  0)
-				,rgb(223, 96, 32),rgb(191, 64, 64),rgb(180,  0,  0)
-				,rgb(120,  0,  0),rgb( 60,  0,  0),rgb(120,  0,128),rgb(255,  0,200)
-			];
-
-		attribute<string> label : DialogType = "LabelText",
-			['0 -  20','20 -  30','30 -  40','40 -  50','50 -  55','55 -  60','60 -  65','65 -  70','70 -  75',' 75-  80',' 80-  90',' 90- '];
-	}
-
-	unit<uint8> ratio9K: nrofrows = 9
-	{
-		attribute<ratio> ClassBreaks: DialogType = "Classification",
-			[0,0.0001,0.15,0.30,0.45,0.60,0.75,0.90,1.05];
-
-		attribute<uint32> BrushColor: DialogType = "BrushColor",
-			[
-				 rgb(218,218,218), rgb(255,255,204),rgb(255,255,128)
-				,rgb(255,230,102), rgb(255,179, 51),rgb(255,128,  0)
-				,rgb(255, 51,  0), rgb(230,  0,  0),rgb(153,  0,  0)
-			];
-
-		attribute<uint32> SymbolColor:= BrushColor, DialogType = "SymbolColor";
-
-		attribute<string> label : DialogType = "LabelText",
-			[' 0 ', '0    - 0.15', '0.15 - 0.30', '0.30 - 0.45', '0.45 - 0.60', '0.60 - 0.75', '0.75 - 0.90', '0.90 - 1.05', '> 1.05'];
-	}
-
-	unit<uint8> ratio9F: nrofrows = 8
-	{
-		attribute<ratio> ClassBreaks: DialogType = "Classification",
-			[0,0.40,0.55,0.65,0.70,0.75, 0.8,0.9];
-
-		attribute<uint32> BrushColor: DialogType = "BrushColor",
-			[
-				 rgb(255,255,204),rgb(255,255,128)
-				,rgb(255,230,102), rgb(255,179, 51),rgb(255,128,  0)
-				,rgb(255, 51,  0), rgb(230,  0,  0),rgb(153,  0,  0)
-			];
-
-		attribute<uint32> SymbolColor:= BrushColor, DialogType = "SymbolColor";
-
-		attribute<string> label : DialogType = "LabelText",
-			[ '0    - 0.40', '0.40 - 0.55', '0.55 - 0.65', '0.65 - 0.70', '0.70 - 0.75',  '0.75 - 0.80','0.80 - 0.90', '> 0.90'];
-	}
-
-		unit<uint8> example_for_size: nrofrows = 3 // Domain unit with three rows
-		{
-			attribute<nr_inh> ClassBreaks: [      0, 1000000  ,2000000];                                        // Set classbreaks at given intervals of inhabitants
-			attribute<string> label:       ['small', 'medium' ,'large'];                                        // Semantic labels
-			attribute<uint32> BrushColor:  [rgb(0,255,0),rgb(0,0,255),rgb(255,0,0)], DialogType = "BrushColor"; // Use colors: Green, Blue, Red
-		}
-}
-
-	container Units // Definition of value units
-	{
-
-//    #include <Classifications.dms> 
- 
-		unit<float32> nr_inh := baseunit('inhabitants', float32);
-		
-		unit<float64> m      := baseunit('meter', float64);
-		unit<float64> km     := 1000 * m;
-		unit<float64> m2     := m * m;
-
-	// no metric
-	unit<float64> ratio         := range(1.0 * m2 / m2, 0.0, 1.0)	, cdf = "Classifications/ratio13F/ClassBreaks";
-	unit<float64> percent       := 100.0 * ratio;
-// , cdf = "Classifications/Percentage13K/ClassBreaks";
-
-		unit<float32> s      := baseunit('second', float32);
-		unit<float32> hr     := 3600 * s;
-
-		unit<float32> km_hr  := km / hr;
-	}
-
-//    #include<Geography.dms> 
- 
 	container Geography // Define the extend of the scene and the projection 
 	{
-		unit<fpoint> rdc_base : format = "EPSG:28992", DialogData = "ngr_layer";               // Rijksdriehoekstelsel, a 2D cartesian coordinate system for the netherlands
-		unit<fpoint> rdc_meter      := range(rdc_base, point(0f, 300000f), point(280000f, 625000f)); // Define a 2D range consisting of 2D cartesian coordinates, later used for the "province" domain unit geometry attribute
-		unit<fpoint> rdc      := Geography/rdc_meter;
+		unit<fpoint> rdc_base   : format = "EPSG:28992", DialogData = "ngr_layer";               // Rijksdriehoekstelsel, a 2D cartesian coordinate system for the netherlands
+		unit<fpoint> rdc_meter  := range(rdc_base, point(0f, 300000f), point(280000f, 625000f)); // Define a 2D range consisting of 2D cartesian coordinates, later used for the "province" domain unit geometry attribute
+		unit<fpoint> rdc        := Geography/rdc_meter;
 
-		#include<ngr_layer.dms>                                                                // Tiles for background layer
+		#include<ngr_layer.dms>                                                                 // Tiles for background layer
 	}
 
     container NLgrid_t1
 	{
-unit<fpoint> rdc_meter: Range = "[{300000, 0}, {625000, 280000})"; 
+		unit<fpoint> rdc_meter: Range = "[{300000, 0}, {625000, 280000})"; 
 
-parameter<rdc_meter> TopLeftCoord :=  point(float32(625000), float32(10000), rdc_meter);
+		parameter<rdc_meter> TopLeftCoord :=  point(float32(625000), float32(10000), rdc_meter);
 
-parameter<int16> nrofrows  := int16(3250);
-parameter<int16> nrofcols := int16(2700);
+		parameter<int16> nrofrows  := int16(3250);
+		parameter<int16> nrofcols := int16(2700);
 
-unit<spoint> rdc_100m
-:=  range(
-      gridset(
-         Geography/rdc
-        ,point(float32(-100), float32(100), rdc_meter)
-        ,TopLeftCoord
-        ,spoint
-      )
-      ,point(int16(0), int16(0))
-      ,point(nrofrows, nrofcols)
-   )
-,  Descr = "rdCoords/100m van NW naar SE (3250 rows, 2700 cols)" ;
-
+		unit<spoint> rdc_100m
+		:=  range(
+			  gridset(
+				 Geography/rdc
+				,point(float32(-100), float32(100), rdc_meter)
+				,TopLeftCoord
+				,spoint
+			  )
+			  ,point(int16(0), int16(0))
+			  ,point(nrofrows, nrofcols)
+		   )
+		,  Descr = "rdCoords/100m van NW naar SE (3250 rows, 2700 cols)" ;
 	}
-	
 	
     container NLgrid_import
 	{
-
-unit <wpoint> rdc_100m :=Geography/rdc_grids/km1;
-
+		unit <wpoint> rdc_100m := Geography/rdc_grids/km1;
 	}
-
 
     container NLgrid_t2
 	{
-//unit<fpoint> rdc_meter: Range = "[{300000, 0}, {625000, 280000})"; 
+		//unit<fpoint> rdc_meter: Range = "[{300000, 0}, {625000, 280000})"; 
 
-parameter<Geography/rdc> TopLeftCoord :=  point(float32(625000), float32(10000), Geography/rdc);
+		parameter<Geography/rdc> TopLeftCoord :=  point(float32(625000), float32(10000), Geography/rdc);
 
-parameter<int16> nrofrows  := int16(3250);
-parameter<int16> nrofcols := int16(2700);
+		parameter<int16> nrofrows  := int16(3250);
+		parameter<int16> nrofcols := int16(2700);
 
-unit<spoint> rdc_100m
-:=  range(
-      gridset(
-         Geography/rdc
-        ,point(float32(-100), float32(100), Geography/rdc)
-        ,TopLeftCoord
-        ,spoint
-      )
-      ,point(int16(0), int16(0))
-      ,point(nrofrows, nrofcols)
-   )
-,  Descr = "rdCoords/100m van NW naar SE (3250 rows, 2700 cols)";
-
+		unit<spoint> rdc_100m
+		:=  range(
+			  gridset(
+				 Geography/rdc
+				,point(float32(-100), float32(100), Geography/rdc)
+				,TopLeftCoord
+				,spoint
+			  )
+			  ,point(int16(0), int16(0))
+			  ,point(nrofrows, nrofcols)
+		   )
+		,  Descr = "rdCoords/100m van NW naar SE (3250 rows, 2700 cols)";
 	}
 
-// code for ConfigPointColRow=1
-container NLgrid
+	// code for ConfigPointColRow=1
+	container NLgrid
 	{
 		unit<wpoint> rdc_100m :=
 			range(
@@ -191,12 +80,10 @@ container NLgrid
 			)
 			,	Descr = "rdCoords/100m van NW naar SE (2700 cols)"
 		{
-
 		}
 	}
-		
-		
-container NLgrid_noswap
+	
+	container NLgrid_noswap
 	{
 		unit<wpoint> rdc_100m :=
 			range(
@@ -206,146 +93,90 @@ container NLgrid_noswap
 			)
 			,	Descr = "rdCoords/100m van NW naar SE (2700 cols)"
 		{
-
 		}
 	}
-				
-		
 
-
-	container SourceData: Using = "Units"
-	{
-
-		#include <ReadmultiRDF.dms>
-
-		unit<uint32> pv24                                // Domain unit province, dimensions and attributes allocated based on the "provincie.shp" file:
-		:	StorageName     = "%ProjDir%/dnload2211/Rudifun_PV24_Flevoland/Rudifun_PV24_Flevoland/Rudifun_Netto_Buurt_PV24.shp" // Path to shapefile (2D spatial dataset + N attributes)
-		,	StorageType     = "gdal.vect"                    // Type of file to read
-		,	StorageReadOnly = "True"                         // We will not be editting the underlying shapefile
-		{
-
-			attribute<Geography/rdc> geometry (poly);        // Obtained from the "Rudifun_Netto_Gemeente_PV26.shp" geometry
-			attribute<string>        label := BU_CODE;
-		}
-		
-		unit<uint32> pv25                                // Domain unit province, dimensions and attributes allocated based on the "provincie.shp" file:
-		:	StorageName     = "%ProjDir%/dnload2211/Rudifun_PV25_Gelderland/Rudifun_PV25_Gelderland/Rudifun_Netto_Buurt_PV25.shp" // Path to shapefile (2D spatial dataset + N attributes)
-		,	StorageType     = "gdal.vect"                    // Type of file to read
-		,	StorageReadOnly = "True"                         // We will not be editting the underlying shapefile
-		{
-
-			attribute<Geography/rdc> geometry (poly);        // Obtained from the "Rudifun_Netto_Gemeente_PV26.shp" geometry
-			attribute<string>        label := BU_CODE;
-		}		
-		
-		unit<uint32> pv26                                // Domain unit province, dimensions and attributes allocated based on the "provincie.shp" file:
-		:	StorageName     = "%ProjDir%/dnload2211/Rudifun_PV26_Utrecht/Rudifun_PV26_Utrecht/Rudifun_Netto_Buurt_PV26.shp" // Path to shapefile (2D spatial dataset + N attributes)
-		,	StorageType     = "gdal.vect"                    // Type of file to read
-		,	StorageReadOnly = "True"                         // We will not be editting the underlying shapefile
-		{
-
-			attribute<Geography/rdc> geometry (poly);        // Obtained from the "Rudifun_Netto_Gemeente_PV26.shp" geometry
-			attribute<string>        label := BU_CODE;
-		}		
-		
-//		unit<uint32> gem2  := union_unit(pv24,pv25,pv26) {
-//		    attribute<string> label := union_data(., pv24/label,pv25/label,pv26/label); 
-//		}
-
-		//unit<uint32> gem2  := pv26;
-		unit<uint32> gem2  := Merge/bestand_selectie/shp_attribuut/att;
-
-	}
+    #include <SourceData.dms> 
 
 	container Results: Using = "Units"
 	{
-
 		container inbuurt1
-		{
-		  
+		{	  
 		    // attribute<Int32>  CurrConfigPointColRow  := ConfigSettings/ConfigPointColRow ;
-            attribute<fpoint>  ctr      (SourceData/gem2) := centroid(SourceData/gem2/geometry); 
-            attribute<m2> area_geo      (SourceData/gem2) := float64(area(SourceData/gem2/geometry, float32(m2))); 
-            attribute<m2>  area_geo_diff      (SourceData/gem2) := float64(SourceData/gem2/Shape_Area) - area_geo ;
-		
+            attribute<fpoint>  ctr           (SourceData/gem2) := centroid(SourceData/gem2/geometry); 
+            attribute<m2>      area_geo      (SourceData/gem2) := float64(area(SourceData/gem2/geometry, float32(m2))); 
+            attribute<m2>      area_geo_diff (SourceData/gem2) := float64(SourceData/gem2/Shape_Area) - area_geo ;
 
-//FSI_22	Berekende Floor Space Index in 2022 ( FSI_22 = opp_bruto_22/Shape_Area )
-//GSI_22	Berekende Ground Space Index in 2022 ( GSI_22 = pand_opp_bgt_22/Shape_Area )
-//OSR_22	Berekende Open Space Ratio in 2022 ( OSR_22 = (1-GSI_22)/FSI_22 )
-//L_22	Berekend gemiddeld aantal bouwlagen in 2022 ( L_22 = opp_bruto_22 / pand_opp_22 ) 
-//MXI_22	Berekende Mixed Use Index in 2022 ( MXI_22 = (bvo_woon_22+bvo_logies_22)/(opp_bruto_22-(bvo_overige_22+opp_schuurtje_22)) )
+			//FSI_22	Berekende Floor Space Index in 2022 ( FSI_22 = opp_bruto_22/Shape_Area )
+			//GSI_22	Berekende Ground Space Index in 2022 ( GSI_22 = pand_opp_bgt_22/Shape_Area )
+			//OSR_22	Berekende Open Space Ratio in 2022 ( OSR_22 = (1-GSI_22)/FSI_22 )
+			//L_22	Berekend gemiddeld aantal bouwlagen in 2022 ( L_22 = opp_bruto_22 / pand_opp_22 ) 
+			//MXI_22	Berekende Mixed Use Index in 2022 ( MXI_22 = (bvo_woon_22+bvo_logies_22)/(opp_bruto_22-(bvo_overige_22+opp_schuurtje_22)) )
 
-			attribute<ratio>           C_FSI22       (SourceData/gem2)  := float64(SourceData/gem2/bruto_22 ) / float64(SourceData/gem2/Shape_Area );
-			attribute<ratio>           C_FSI22diff   (SourceData/gem2)  := float64(SourceData/gem2/FSI_22) - C_FSI22;
+			attribute<ratio>    C_FSI22       (SourceData/gem2)  := float64(SourceData/gem2/bruto_22) / float64(SourceData/gem2/Shape_Area);
+			attribute<ratio>    C_FSI22diff   (SourceData/gem2)  := float64(SourceData/gem2/FSI_22) - C_FSI22;
 		
-			attribute<ratio>           GSI22B       (SourceData/gem2)  := float64(SourceData/gem2/pand_opp22) / float64(SourceData/gem2/Shape_Area);
-			attribute<ratio>           GSI22Bdiff   (SourceData/gem2)  := float64(SourceData/gem2/GSI_22) - GSI22B;
+			attribute<ratio>    GSI22B        (SourceData/gem2)  := float64(SourceData/gem2/pand_opp22) / float64(SourceData/gem2/Shape_Area);
+			attribute<ratio>    GSI22Bdiff    (SourceData/gem2)  := float64(SourceData/gem2/GSI_22) - GSI22B;
+
+			attribute<m2>       O_MXI22T       (SourceData/gem2)  := ((SourceData/gem2/bvo_woo_22 + SourceData/gem2/bvo_log_22) [m2] );			            
+			attribute<m2>       O_MXI22N       (SourceData/gem2)  := (( SourceData/gem2/bruto_22 - (SourceData/gem2/bvo_ove_22 + SourceData/gem2/opp_sch_22))[m2]);
+			attribute<ratio>    R_MXI22T       (SourceData/gem2)  := O_MXI22T / area_geo  ;			            
+			attribute<ratio>    R_MXI22N       (SourceData/gem2)  := O_MXI22N /  area_geo  ;
+            parameter<ratio>    AVG_MXI22                         := float64(sum(O_MXI22T) / sum(O_MXI22N));
+			attribute<ratio>    C_MXI22        (SourceData/gem2)  := float64(O_MXI22T / O_MXI22N );
+			attribute<ratio>    C_MXI22diff    (SourceData/gem2)  := float64(SourceData/gem2/MXI_22) - C_MXI22;
 			
-			attribute<m2>           O_MXI22T       (SourceData/gem2)  :=  ((SourceData/gem2/bvo_woo_22 + SourceData/gem2/bvo_log_22) [m2] ) ;			            
-			attribute<m2>           O_MXI22N       (SourceData/gem2)  :=   (( SourceData/gem2/bruto_22 - (SourceData/gem2/bvo_ove_22 + SourceData/gem2/opp_sch_22) )[m2] ) ;
-			attribute<ratio>           R_MXI22T       (SourceData/gem2)  :=  O_MXI22T / area_geo  ;			            
-			attribute <ratio>           R_MXI22N       (SourceData/gem2)  :=   O_MXI22N /  area_geo  ;
-            parameter<ratio>      AVG_MXI22   := float64(sum(O_MXI22T) / sum(O_MXI22N));
-			attribute<ratio>           C_MXI22       (SourceData/gem2)  := float64(O_MXI22T / O_MXI22N );
-			attribute<ratio>           C_MXI22diff   (SourceData/gem2)  := float64(SourceData/gem2/MXI_22) - C_MXI22;
-			unit<uint32> Prov := unique(SourceData/gem2/PV_NAAM){
-			attribute<uint32> Prov_rel (SourceData/gem2) := rlookup(SourceData/gem2/PV_NAAM, Prov/Values);
-            attribute<m2>      PV_MXI22T  (Prov) := sum(O_MXI22T,Prov_rel) ;
-			attribute<m2>      PV_MXI22N (Prov) := sum(O_MXI22N,Prov_rel) ;
-            attribute<ratio>           PV_MXI22       (Prov)  := float64(PV_MXI22T / PV_MXI22N );                              			 
+			unit<uint32> Prov := unique(SourceData/gem2/PV_NAAM)
+			{
+				attribute<uint32>  Prov_rel   (SourceData/gem2) := rlookup(SourceData/gem2/PV_NAAM, Prov/Values);
+				attribute<m2>      PV_MXI22T  (Prov)            := sum(O_MXI22T,Prov_rel) ;
+				attribute<m2>      PV_MXI22N  (Prov)            := sum(O_MXI22N,Prov_rel) ;
+				attribute<ratio>   PV_MXI22   (Prov)            := float64(PV_MXI22T / PV_MXI22N );                              			 
             }
-        }
-		
+        }		
 
 		container kernelfiets
-{
-   unit<uint32> Dist2Range;
-   unit<spoint> pot50km := range(spoint, point(-100s, -100s), point(101s, 101s))
-    {
-      attribute<Dist2Range> distMatr  := dist2(point(0s, 0s, .), Dist2Range);
-      //attribute<float32>    AbsWeight := distMatr <= 2500 ? 1f : 0f;
-	  //attribute<float32>    AbsWeight := exp(- float32(distMatr) / 2500.0f );
-	  parameter<m> maxfietsdist := 5000 [m];
-	  parameter<m> gridstep := 100[m];
-	  parameter<ratio> gaussdenom := (maxfietsdist / gridstep / 2.0) * (maxfietsdist / gridstep / 2.0);
-	  attribute<float32>    AbsWeight1 := exp(- float32(distMatr) / float32(gaussdenom)) ;
-	  attribute<float32>    AbsWeight := AbsWeight1 / sum(AbsWeight1) ;
-   }
-}
+		{
+		   unit<uint32> Dist2Range;
+		   unit<spoint> pot50km := range(spoint, point(-100s, -100s), point(101s, 101s))
+			{
+			  attribute<Dist2Range> distMatr  := dist2(point(0s, 0s, .), Dist2Range);
+			  //attribute<float32>    AbsWeight := distMatr <= 2500 ? 1f : 0f;
+			  //attribute<float32>    AbsWeight := exp(- float32(distMatr) / 2500.0f );
+			  parameter<m>       maxfietsdist := 5000 [m];
+			  parameter<m>       gridstep     := 100[m];
+			  parameter<ratio>   gaussdenom   := (maxfietsdist / gridstep / 2.0) * (maxfietsdist / gridstep / 2.0);
+			  attribute<float32> AbsWeight1   := exp(- float32(distMatr) / float32(gaussdenom)) ;
+			  attribute<float32> AbsWeight    := AbsWeight1 / sum(AbsWeight1) ;
+		   }
+		}
 		
 		container ingrid
 		{
-		
-           attribute<UInt32> gconv  (NLgrid/rdc_100m) := poly2grid(SourceData/gem2/geometry[Geography/rdc_meter], NLgrid/rdc_100m); 
-		   attribute<bool>                  HeeftBuurt  (NLgrid/rdc_100m)    := IsDefined(gconv);
-		   attribute<ratio> test (NLgrid/rdc_100m) := float64(rnd_uniform(0, NLgrid/rdc_100m, range(float32, 0f, 1f)));
+			attribute<UInt32> gconv       (NLgrid/rdc_100m) := poly2grid(SourceData/gem2/geometry[Geography/rdc_meter], NLgrid/rdc_100m); 
+			attribute<bool>   HeeftBuurt  (NLgrid/rdc_100m) := IsDefined(gconv);
+			attribute<ratio>  test        (NLgrid/rdc_100m) := float64(rnd_uniform(0, NLgrid/rdc_100m, range(float32, 0f, 1f)));
 
-             attribute<ratio>      G_MXI22T  (NLgrid/rdc_100m) := Results/inbuurt1/R_MXI22T[gconv];
-			 attribute<ratio>      G_MXI22N  (NLgrid/rdc_100m) := Results/inbuurt1/R_MXI22N[gconv];
-			 attribute<ratio>      G1_MXI22   (NLgrid/rdc_100m) := Results/inbuurt1/C_MXI22[gconv];
-			 attribute<ratio>      G2_MXI22   (NLgrid/rdc_100m) :=  G_MXI22T / G_MXI22N;
-			 attribute<ratio>      D_MXI22   (NLgrid/rdc_100m) :=  G1_MXI22 - G2_MXI22;
+			attribute<ratio>  G_MXI22T    (NLgrid/rdc_100m) := Results/inbuurt1/R_MXI22T[gconv];
+			attribute<ratio>  G_MXI22N    (NLgrid/rdc_100m) := Results/inbuurt1/R_MXI22N[gconv];
+			attribute<ratio>  G1_MXI22    (NLgrid/rdc_100m) := Results/inbuurt1/C_MXI22[gconv];
+			attribute<ratio>  G2_MXI22    (NLgrid/rdc_100m) := G_MXI22T / G_MXI22N;
+			attribute<ratio>  D_MXI22     (NLgrid/rdc_100m) := G1_MXI22 - G2_MXI22;
 			 
 //           attribute<m2>      G_MXI22T  (NLgrid/rdc_100m) := (rnd_uniform(0, NLgrid/rdc_100m, range(float32, 0f, 1f)))[m2];
 		  
-		   parameter<m2>  max_gmxI22T := max(G_MXI22T);
-		   parameter<m2>  max_omxI22T := max(Results/inbuurt1/O_MXI22T);
+			parameter<m2>  max_gmxI22T := max(G_MXI22T);
+			parameter<m2>  max_omxI22T := max(Results/inbuurt1/O_MXI22T);
         } 
 		
 				container smoothgrid
-		{
-		
-
-             attribute<ratio>      S_MXI22T  (NLgrid/rdc_100m) := float64(potential( float32(Results/ingrid/G_MXI22T),
-			              float32(kernelfiets/pot50km/AbsWeight) ));
-             attribute<ratio>      S_MXI22N  (NLgrid/rdc_100m) := float64(potential( float32(Results/ingrid/G_MXI22N),
-			              float32(kernelfiets/pot50km/AbsWeight)) );						  
-			
-			 attribute<ratio>      S_MXI22   (NLgrid/rdc_100m) :=  iif(S_MXI22N >0.05, S_MXI22T / S_MXI22N,1.0/0.0);
-
-			 
-
-        } 
-		
+		{		
+            attribute<ratio> S_MXI22T  (NLgrid/rdc_100m) := float64(potential( float32(Results/ingrid/G_MXI22T),
+			              float32(kernelfiets/pot50km/AbsWeight)));
+            attribute<ratio> S_MXI22N  (NLgrid/rdc_100m) := float64(potential( float32(Results/ingrid/G_MXI22N),
+			              float32(kernelfiets/pot50km/AbsWeight)));						  
+			attribute<ratio> S_MXI22   (NLgrid/rdc_100m) :=  iif(S_MXI22N > 0.05, S_MXI22T / S_MXI22N, 1.0/0.0);
+        } 	
 	}
 }

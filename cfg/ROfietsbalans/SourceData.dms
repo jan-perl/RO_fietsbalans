@@ -1,0 +1,43 @@
+container SourceData: Using = "Units"
+{
+
+	#include <ReadmultiRDF.dms>
+
+	unit<uint32> pv24                                // Domain unit province, dimensions and attributes allocated based on the "provincie.shp" file:
+	:	StorageName     = "%ProjDir%/dnload2211/Rudifun_PV24_Flevoland/Rudifun_PV24_Flevoland/Rudifun_Netto_Buurt_PV24.shp" // Path to shapefile (2D spatial dataset + N attributes)
+	,	StorageType     = "gdal.vect"                    // Type of file to read
+	,	StorageReadOnly = "True"                         // We will not be editting the underlying shapefile
+	{
+
+		attribute<Geography/rdc> geometry (poly);        // Obtained from the "Rudifun_Netto_Gemeente_PV26.shp" geometry
+		attribute<string>        label := BU_CODE;
+	}
+	
+	unit<uint32> pv25                                // Domain unit province, dimensions and attributes allocated based on the "provincie.shp" file:
+	:	StorageName     = "%ProjDir%/dnload2211/Rudifun_PV25_Gelderland/Rudifun_PV25_Gelderland/Rudifun_Netto_Buurt_PV25.shp" // Path to shapefile (2D spatial dataset + N attributes)
+	,	StorageType     = "gdal.vect"                    // Type of file to read
+	,	StorageReadOnly = "True"                         // We will not be editting the underlying shapefile
+	{
+
+		attribute<Geography/rdc> geometry (poly);        // Obtained from the "Rudifun_Netto_Gemeente_PV26.shp" geometry
+		attribute<string>        label := BU_CODE;
+	}		
+	
+	unit<uint32> pv26                                // Domain unit province, dimensions and attributes allocated based on the "provincie.shp" file:
+	:	StorageName     = "%ProjDir%/dnload2211/Rudifun_PV26_Utrecht/Rudifun_PV26_Utrecht/Rudifun_Netto_Buurt_PV26.shp" // Path to shapefile (2D spatial dataset + N attributes)
+	,	StorageType     = "gdal.vect"                    // Type of file to read
+	,	StorageReadOnly = "True"                         // We will not be editting the underlying shapefile
+	{
+
+		attribute<Geography/rdc> geometry (poly);        // Obtained from the "Rudifun_Netto_Gemeente_PV26.shp" geometry
+		attribute<string>        label := BU_CODE;
+	}		
+	
+//		unit<uint32> gem2  := union_unit(pv24,pv25,pv26) {
+//		    attribute<string> label := union_data(., pv24/label,pv25/label,pv26/label); 
+//		}
+
+	//unit<uint32> gem2  := pv26;
+	unit<uint32> gem2  := Merge/bestand_selectie/shp_attribuut/att;
+
+}

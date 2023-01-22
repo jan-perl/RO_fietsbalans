@@ -1,0 +1,18 @@
+container Units // Definition of value units
+{
+	unit<float32> nr_inh := baseunit('inhabitants', float32);
+	
+	unit<float64> m      := baseunit('meter', float64);
+	unit<float64> km     := 1000 * m;
+	unit<float64> m2     := m * m;
+
+	// no metric
+	unit<float64> ratio         := range(1.0 * m2 / m2, 0.0, 1.0)	, cdf = "Classifications/ratio13F/ClassBreaks";
+	unit<float64> percent       := 100.0 * ratio;
+	// , cdf = "Classifications/Percentage13K/ClassBreaks";
+
+	unit<float32> s      := baseunit('second', float32);
+	unit<float32> hr     := 3600 * s;
+
+	unit<float32> km_hr  := float32(km) / hr;
+}

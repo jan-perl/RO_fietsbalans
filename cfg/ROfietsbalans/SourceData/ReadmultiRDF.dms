@@ -63,18 +63,18 @@ container Merge
 				attribute<string> label               := = 'union_data(att,' + asList('bestanden/' + shp_bestand/naam  + '/src/label' ,',') + ')';
 				attribute<Geography/rdc> geometry (poly)        := = 'union_data(att,' + asList('bestanden/' + shp_bestand/naam  + '/src/geometry' ,',') + ')';
 				
-				attribute<Int32> bruto_22            := = 'union_data(att,' + asList('bestanden/' + shp_bestand/naam  + '/src/bruto_22' ,',') + ')';
-				attribute<Int32> pand_opp22            := = 'union_data(att,' + asList('bestanden/' + shp_bestand/naam  + '/src/pand_opp22' ,',') + ')';
+				attribute<Int64> bruto_22            := = 'union_data(att,' + asList('bestanden/' + shp_bestand/naam  + '/src/bruto_22' ,',') + ')';
+				attribute<Int64> pand_opp22            := = 'union_data(att,' + asList('bestanden/' + shp_bestand/naam  + '/src/pand_opp22' ,',') + ')';
 				attribute<float64> Shape_Area            := = 'union_data(att,' + asList('bestanden/' + shp_bestand/naam  + '/src/Shape_Area' ,',') + ')';
 				attribute<float64> FSI_22            := = 'union_data(att,' + asList('bestanden/' + shp_bestand/naam  + '/src/FSI_22' ,',') + ')';
 				attribute<float64> GSI_22            := = 'union_data(att,' + asList('bestanden/' + shp_bestand/naam  + '/src/GSI_22' ,',') + ')';
 				attribute<float64> MXI_22            := = 'union_data(att,' + asList('bestanden/' + shp_bestand/naam  + '/src/MXI_22' ,',') + ')';
 //			attribute<m2>           O_MXI22T       (SourceData/gem2)  := float32(SourceData/gem2/bvo_woo_22 + SourceData/gem2/bvo_log_22)[m2] ;			            
 //			attribute<m2>           O_MXI22N       (SourceData/gem2)  := float32( SourceData/gem2/bruto_22 - (SourceData/gem2/bvo_ove_22 + SourceData/gem2/opp_sch_22) ) [m2];
-				attribute<Int32> bvo_woo_22            := = 'union_data(att,' + asList('bestanden/' + shp_bestand/naam  + '/src/bvo_woo_22' ,',') + ')';
-				attribute<Int32> bvo_log_22            := = 'union_data(att,' + asList('bestanden/' + shp_bestand/naam  + '/src/bvo_log_22' ,',') + ')';
-				attribute<Int32> bvo_ove_22            := = 'union_data(att,' + asList('bestanden/' + shp_bestand/naam  + '/src/bvo_ove_22' ,',') + ')';
-				attribute<Int32> opp_sch_22            := = 'union_data(att,' + asList('bestanden/' + shp_bestand/naam  + '/src/opp_sch_22' ,',') + ')';
+				attribute<Int64> bvo_woo_22            := = 'union_data(att,' + asList('bestanden/' + shp_bestand/naam  + '/src/bvo_woo_22' ,',') + ')';
+				attribute<Int64> bvo_log_22            := = 'union_data(att,' + asList('bestanden/' + shp_bestand/naam  + '/src/bvo_log_22' ,',') + ')';
+				attribute<Int64> bvo_ove_22            := = 'union_data(att,' + asList('bestanden/' + shp_bestand/naam  + '/src/bvo_ove_22' ,',') + ')';
+				attribute<Int64> opp_sch_22            := = 'union_data(att,' + asList('bestanden/' + shp_bestand/naam  + '/src/opp_sch_22' ,',') + ')';
   
 				attribute<string> PV_NAAM            := = 'union_data(att,' + asList('bestanden/' + shp_bestand/naam  + '/src/PV_NAAM' ,',') + ')';
 				attribute<string> PV_CODE            := = 'union_data(att,' + asList('bestanden/' + shp_bestand/naam  + '/src/PV_CODE' ,',') + ')';

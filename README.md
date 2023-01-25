@@ -26,7 +26,7 @@ door
 
 
 om te runnen:
-klik op Results/smoothgrid/S_MXI22
+klik op Results/smoothgridfiets/S_MXI22
 en sla resultaat op door middel van screenshot
 
 

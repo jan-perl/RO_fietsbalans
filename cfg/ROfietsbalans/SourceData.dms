@@ -38,6 +38,6 @@ container SourceData: Using = "Units"
 //		}
 
 	//unit<uint32> gem2  := pv26;
-	unit<uint32> gem2  := Merge/bestand_selectie/shp_attribuut/att;
-
+	//unit<uint32> gem2  := iif(config1/alleen_Utrecht, pv26,Merge/bestand_selectie/shp_attribuut/att);
+     unit<uint32> gem2  := Merge/bestand_selectie/shp_attribuut/att;
 }

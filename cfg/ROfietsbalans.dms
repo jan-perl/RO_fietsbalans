@@ -8,6 +8,13 @@ container ROfietsbalans
 {
     #include <Classifications.dms> 
     #include <Units.dms> 
+	
+		container config1 // Define configuration
+	{
+		unit<bool> alleen_Utrecht := True;
+
+		#include<ngr_layer.dms>                                                                 // Tiles for background layer
+	}
 
 	container Geography // Define the extend of the scene and the projection 
 	{
@@ -196,6 +203,21 @@ container ROfietsbalans
 			attribute<ratio> S_MXI22   (NLgrid/rdc_100m) :=  iif(S_MXI22N > 0.05, S_MXI22T / S_MXI22N, 1.0/0.0);
         } 	
 		
+			  unit<uint32> fietswijk1  := SourceData/gem2
+	       ,    StorageName = "%ProjDir%/output/fietswijk1.dbf"  
+	    {
+		      attribute<Geography/rdc > geometry (poly) :=SourceData/gem2/geometry,    StorageName = "%ProjDir%/output/fietswijk1.shp" ;
+			  attribute<string> label  :=SourceData/gem2/label;
+			  attribute<string> BU_CODE  :=SourceData/gem2/BU_CODE;
+			  attribute<string> BU_NAAM  :=SourceData/gem2/BU_NAAM;
+//			  attribute<float64> GEM2021NR :=SourceData/gem2/GEM2021NR;
+			  attribute<string> GM_CODE  :=SourceData/gem2/GM_CODE;
+			  attribute<string> GM_NAAM  :=SourceData/gem2/GM_NAAM;
+			  attribute<string> PV_CODE  :=SourceData/gem2/PV_CODE;
+			  attribute<string> PV_NAAM  :=SourceData/gem2/PV_NAAM;
+		      attribute<ratio> S_MXI22_b  :=mean(smoothgridfiets/S_MXI22,ingrid/gconv) ;
+		}
+		
 						container smoothgridauto
 		{		
             attribute<ratio> S_MXI22T  (NLgrid/rdc_100m) := float64(potential( float32(Results/ingrid/G_MXI22T),
@@ -203,6 +225,7 @@ container ROfietsbalans
             attribute<ratio> S_MXI22N  (NLgrid/rdc_100m) := float64(potential( float32(Results/ingrid/G_MXI22N),
 			              float32(kernelauto/pot50km/AbsWeight)));						  
 			attribute<ratio> S_MXI22   (NLgrid/rdc_100m) :=  iif(S_MXI22N > 0.02, S_MXI22T / S_MXI22N, 1.0/0.0);
-        } 	
+        } 
+        		
 	}
 }

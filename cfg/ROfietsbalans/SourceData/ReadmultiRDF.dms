@@ -78,7 +78,12 @@ container Merge
   
 				attribute<string> PV_NAAM            := = 'union_data(att,' + asList('bestanden/' + shp_bestand/naam  + '/src/PV_NAAM' ,',') + ')';
 				attribute<string> PV_CODE            := = 'union_data(att,' + asList('bestanden/' + shp_bestand/naam  + '/src/PV_CODE' ,',') + ')';
+				attribute<string> GM_NAAM            := = 'union_data(att,' + asList('bestanden/' + shp_bestand/naam  + '/src/GM_NAAM' ,',') + ')';
+				attribute<string> GM_CODE            := = 'union_data(att,' + asList('bestanden/' + shp_bestand/naam  + '/src/GM_CODE' ,',') + ')';
+				attribute<string> BU_NAAM            := = 'union_data(att,' + asList('bestanden/' + shp_bestand/naam  + '/src/BU_NAAM' ,',') + ')';
+				attribute<string> BU_CODE            := = 'union_data(att,' + asList('bestanden/' + shp_bestand/naam  + '/src/BU_CODE' ,',') + ')';
 
+		
 				
 			}
 			

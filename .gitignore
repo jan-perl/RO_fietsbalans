@@ -6,3 +6,5 @@
 *.prj
 *.sbx
 *.shx
+dnload2211/*
+output/*

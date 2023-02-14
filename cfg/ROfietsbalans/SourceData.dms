@@ -37,7 +37,6 @@ container SourceData: Using = "Units"
 //		    attribute<string> label := union_data(., pv24/label,pv25/label,pv26/label); 
 //		}
 
-	//unit<uint32> gem2  := pv26;
-	unit<uint32> gem2  := Merge/bestand_selectie/shp_attribuut/att;
-
+	unit<uint32> gem2  := =iif(config1/alleen_Utrecht, 'pv26','Merge/bestand_selectie/shp_attribuut/att');
+   
 }

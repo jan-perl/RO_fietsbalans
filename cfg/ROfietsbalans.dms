@@ -1,6 +1,7 @@
 //todo
 //cleanup
 
+
 // buurprovincies ??
 // oppervlak vs arbeidsplaatsen
 
@@ -8,6 +9,11 @@ container ROfietsbalans
 {
     #include <Classifications.dms> 
     #include <Units.dms> 
+	
+		container config1 // Define configuration
+	{
+		parameter<bool> alleen_Utrecht := True;
+	}
 
 	container Geography // Define the extend of the scene and the projection 
 	{
@@ -152,6 +158,23 @@ container ROfietsbalans
 		   }
 		}
 		
+		container kernelauto
+		{
+		   unit<uint32> Dist2Range;
+		   unit<spoint> pot50km := range(spoint, point(-500s, -500s), point(501s, 501s))
+			{
+			  attribute<Dist2Range> distMatr  := dist2(point(0s, 0s, .), Dist2Range);
+			  //attribute<float32>    AbsWeight := distMatr <= 2500 ? 1f : 0f;
+			  //attribute<float32>    AbsWeight := exp(- float32(distMatr) / 2500.0f );
+			  parameter<m>       maxfietsdist := 25000 [m];
+			  parameter<m>       gridstep     := 100[m];
+			  parameter<ratio>   gaussdenom   := (maxfietsdist / gridstep / 2.0) * (maxfietsdist / gridstep / 2.0);
+			  attribute<float32> AbsWeight1   := exp(- float32(distMatr) / float32(gaussdenom)) ;
+			  attribute<float32> AbsWeight    := AbsWeight1 / sum(AbsWeight1) ;
+		   }
+		}
+		
+		
 		container ingrid
 		{
 			attribute<UInt32> gconv       (NLgrid/rdc_100m) := poly2grid(SourceData/gem2/geometry[Geography/rdc_meter], NLgrid/rdc_100m); 
@@ -170,7 +193,7 @@ container ROfietsbalans
 			parameter<m2>  max_omxI22T := max(Results/inbuurt1/O_MXI22T);
         } 
 		
-				container smoothgrid
+				container smoothgridfiets
 		{		
             attribute<ratio> S_MXI22T  (NLgrid/rdc_100m) := float64(potential( float32(Results/ingrid/G_MXI22T),
 			              float32(kernelfiets/pot50km/AbsWeight)));
@@ -178,5 +201,30 @@ container ROfietsbalans
 			              float32(kernelfiets/pot50km/AbsWeight)));						  
 			attribute<ratio> S_MXI22   (NLgrid/rdc_100m) :=  iif(S_MXI22N > 0.05, S_MXI22T / S_MXI22N, 1.0/0.0);
         } 	
+		
+			  unit<uint32> fietswijk1  := SourceData/gem2
+	       ,    StorageName = "%ProjDir%/output/fietswijk1.dbf"  
+	    {
+		      attribute<Geography/rdc > geometry (poly) :=SourceData/gem2/geometry,    StorageName = "%ProjDir%/output/fietswijk1.shp" ;
+			  attribute<string> label  :=SourceData/gem2/label;
+			  attribute<string> BU_CODE  :=SourceData/gem2/BU_CODE;
+			  attribute<string> BU_NAAM  :=iif( IsNull(SourceData/gem2/BU_NAAM),"", SourceData/gem2/BU_NAAM);
+//			  attribute<float64> GEM2021NR :=SourceData/gem2/GEM2021NR;
+			  attribute<string> GM_CODE  :=SourceData/gem2/GM_CODE;
+			  attribute<string> GM_NAAM  :=iif( IsNull(SourceData/gem2/GM_NAAM),"", SourceData/gem2/GM_NAAM);
+			  attribute<string> PV_CODE  :=SourceData/gem2/PV_CODE;
+			  attribute<string> PV_NAAM  :=iif( IsNull(SourceData/gem2/PV_NAAM),"", SourceData/gem2/PV_NAAM);
+		      attribute<ratio> S_MXI22_b  :=mean(smoothgridfiets/S_MXI22,ingrid/gconv) ;
+		}
+		
+						container smoothgridauto
+		{		
+            attribute<ratio> S_MXI22T  (NLgrid/rdc_100m) := float64(potential( float32(Results/ingrid/G_MXI22T),
+			              float32(kernelauto/pot50km/AbsWeight)));
+            attribute<ratio> S_MXI22N  (NLgrid/rdc_100m) := float64(potential( float32(Results/ingrid/G_MXI22N),
+			              float32(kernelauto/pot50km/AbsWeight)));						  
+			attribute<ratio> S_MXI22   (NLgrid/rdc_100m) :=  iif(S_MXI22N > 0.02, S_MXI22T / S_MXI22N, 1.0/0.0);
+        } 
+        		
 	}
 }

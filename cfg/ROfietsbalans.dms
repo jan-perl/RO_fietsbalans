@@ -152,8 +152,9 @@ container ROfietsbalans
 			  //attribute<float32>    AbsWeight := exp(- float32(distMatr) / 2500.0f );
 			  parameter<m>       maxfietsdist := 5000 [m];
 			  parameter<m>       gridstep     := 100[m];
-			  parameter<ratio>   gaussdenom   := (maxfietsdist / gridstep / 2.0) * (maxfietsdist / gridstep / 2.0);
-			  attribute<float32> AbsWeight1   := exp(- float32(distMatr) / float32(gaussdenom)) ;
+			  parameter<ratio>   FWHMcnv	  := 2.0 * sqrt (2.0 * log (2.0));
+			  parameter<ratio>   gaussdenom   := (maxfietsdist / gridstep /FWHMcnv) ;
+			  attribute<float32> AbsWeight1   := exp(- float32(distMatr) / float32(2.0 * gaussdenom * gaussdenom)) ;
 			  attribute<float32> AbsWeight    := AbsWeight1 / sum(AbsWeight1) ;
 		   }
 		}
@@ -168,8 +169,9 @@ container ROfietsbalans
 			  //attribute<float32>    AbsWeight := exp(- float32(distMatr) / 2500.0f );
 			  parameter<m>       maxfietsdist := 25000 [m];
 			  parameter<m>       gridstep     := 100[m];
-			  parameter<ratio>   gaussdenom   := (maxfietsdist / gridstep / 2.0) * (maxfietsdist / gridstep / 2.0);
-			  attribute<float32> AbsWeight1   := exp(- float32(distMatr) / float32(gaussdenom)) ;
+			  parameter<ratio>   FWHMcnv	  := 2.0 * sqrt (2.0 * log (2.0));
+			  parameter<ratio>   gaussdenom   := (maxfietsdist / gridstep /FWHMcnv) ;
+			  attribute<float32> AbsWeight1   := exp(- float32(distMatr) / float32(2.0 * gaussdenom * gaussdenom)) ;
 			  attribute<float32> AbsWeight    := AbsWeight1 / sum(AbsWeight1) ;
 		   }
 		}
@@ -199,7 +201,7 @@ container ROfietsbalans
 			              float32(kernelfiets/pot50km/AbsWeight)));
             attribute<ratio> S_MXI22N  (NLgrid/rdc_100m) := float64(potential( float32(Results/ingrid/G_MXI22N),
 			              float32(kernelfiets/pot50km/AbsWeight)));						  
-			attribute<ratio> S_MXI22   (NLgrid/rdc_100m) :=  iif(S_MXI22N > 0.05, S_MXI22T / S_MXI22N, 1.0/0.0);
+			attribute<ratio> S_MXI22   (NLgrid/rdc_100m) :=  iif(S_MXI22N > 0.01, S_MXI22T / S_MXI22N, 1.0/0.0);
         } 	
 		
 			  unit<uint32> fietswijk1  := SourceData/gem2
@@ -223,7 +225,7 @@ container ROfietsbalans
 			              float32(kernelauto/pot50km/AbsWeight)));
             attribute<ratio> S_MXI22N  (NLgrid/rdc_100m) := float64(potential( float32(Results/ingrid/G_MXI22N),
 			              float32(kernelauto/pot50km/AbsWeight)));						  
-			attribute<ratio> S_MXI22   (NLgrid/rdc_100m) :=  iif(S_MXI22N > 0.02, S_MXI22T / S_MXI22N, 1.0/0.0);
+			attribute<ratio> S_MXI22   (NLgrid/rdc_100m) :=  iif(S_MXI22N > 0.01, S_MXI22T / S_MXI22N, 1.0/0.0);
         } 
         		
 	}

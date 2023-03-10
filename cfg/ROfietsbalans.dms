@@ -12,7 +12,7 @@ container ROfietsbalans
 	
 		container config1 // Define configuration
 	{
-		parameter<bool> alleen_Utrecht := True;
+		parameter<bool> alleen_Utrecht := False;
 	}
 
 	container Geography // Define the extend of the scene and the projection 

@@ -217,6 +217,10 @@ container ROfietsbalans
 			  attribute<string> PV_CODE  :=SourceData/gem2/PV_CODE;
 			  attribute<string> PV_NAAM  :=iif( IsNull(SourceData/gem2/PV_NAAM),"", SourceData/gem2/PV_NAAM);
 		      attribute<ratio> S_MXI22_b  :=mean(smoothgridfiets/S_MXI22,ingrid/gconv) ;
+			  attribute<m2>       O_MXI22T         := inbuurt1/O_MXI22T;			            
+			  attribute<m2>       O_MXI22N         := inbuurt1/O_MXI22N;
+			  attribute<m2>      area_geo           := inbuurt1/area_geo;
+
 		}
 		
 						container smoothgridauto

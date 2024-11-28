@@ -1,0 +1,507 @@
+// maak rudifun tabellen per PC6
+
+container RUDIFUNpc
+{
+
+    container config1 // Define configuration
+	{
+	    
+		parameter<bool> alleen_Ameland := True,
+		Descr= "Door deze op True te zetten, runt het model snel, en kun je debuggen
+		Zorg er bij check-in in github voor dat deze op True staat !";
+		parameter <string> BAGVERSION := "20240101";
+	}
+
+container Classifications: Using = "Units", KeepData = "True", IsHidden = "True"
+{
+// =========  Classificaties voor Percentages
+	unit<uint8> Percentage13K: nrofrows = 13
+	{
+		attribute<percent> ClassBreaks: DialogType = "Classification",
+			[0,10,20,30,40,50,60,70,80,90,100,120,150];
+
+		attribute<uint32> BrushColor : DialogType = "BrushColor",
+			[
+				 rgb(255,255,255),rgb(255,229,204),rgb(255,204,153)
+				,rgb(255,178,102),rgb(255,153, 51),rgb(255,128,  0)
+				,rgb(223, 96, 32),rgb(191, 64, 64),rgb(180,  0,  0)
+				,rgb(120,  0,  0),rgb( 60,  0,  0),rgb(120,  0,128),rgb(255,  0,200)
+			];
+
+		attribute<string> label : DialogType = "LabelText",
+			[' 0 -  10','10 -  20','20 -  30','30 -  40','40 -  50','50 -  60','60 -  70','70 -  80','80 -  90','90 - 100','100- 120','120- 150','150- 200'];
+	}
+
+	unit<uint8> Ratio13F: nrofrows = 12
+	{
+		attribute<ratio> ClassBreaks: DialogType = "Classification",
+			[0,.2,.3,.4,.5,.55,.6,.65,.7,.75,.8,.9];
+
+        attribute<uint32>  BrushColor :=  ramp_rgb(rgb(255,0,0), rgb(0,255,0), .) ,DialogType = "BrushColor";
+		attribute<uint32> BrushColor_old : DialogType = "BrushColor",
+			[
+				rgb(255,229,204),rgb(255,204,153)
+				,rgb(255,178,102),rgb(255,153, 51),rgb(255,128,  0)
+				,rgb(223, 96, 32),rgb(191, 64, 64),rgb(180,  0,  0)
+				,rgb(120,  0,  0),rgb( 60,  0,  0),rgb(120,  0,128),rgb(255,  0,200)
+			];
+
+		attribute<string> label : DialogType = "LabelText",
+			['0 -  20','20 -  30','30 -  40','40 -  50','50 -  55','55 -  60','60 -  65','65 -  70','70 -  75',' 75-  80',' 80-  90',' 90- '];
+	}
+	
+		unit<uint8> Ratio13L: nrofrows = 12
+	{
+		attribute<ratio> ClassBreaks: DialogType = "Classification",
+			[0,.01,.02,.05,.1,.15,.20,.30,.35,.40,.5,.6];
+
+        attribute<uint32>  BrushColor :=  ramp_rgb(rgb(255,0,0), rgb(0,255,0), .) ,DialogType = "BrushColor";
+		attribute<uint32> BrushColor_old : DialogType = "BrushColor",
+			[
+				rgb(255,229,204),rgb(255,204,153)
+				,rgb(255,178,102),rgb(255,153, 51),rgb(255,128,  0)
+				,rgb(223, 96, 32),rgb(191, 64, 64),rgb(180,  0,  0)
+				,rgb(120,  0,  0),rgb( 60,  0,  0),rgb(120,  0,128),rgb(255,  0,200)
+			];
+
+		attribute<string> label : DialogType = "LabelText",
+			['0 -   1',' 1 -   2',' 2 -   5',' 5 -  10','10 -  15','15 -  20','20 -  30','30 -  35','35 -  40','40 -  50',' 50-  60','60- '];
+	}
+
+	unit<uint8> ratio9K: nrofrows = 9
+	{
+		attribute<ratio> ClassBreaks: DialogType = "Classification",
+			[0,0.0001,0.15,0.30,0.45,0.60,0.75,0.90,1.05];
+
+		attribute<uint32> BrushColor: DialogType = "BrushColor",
+			[
+				 rgb(218,218,218), rgb(255,255,204),rgb(255,255,128)
+				,rgb(255,230,102), rgb(255,179, 51),rgb(255,128,  0)
+				,rgb(255, 51,  0), rgb(230,  0,  0),rgb(153,  0,  0)
+			];
+
+		attribute<uint32> SymbolColor:= BrushColor, DialogType = "SymbolColor";
+
+		attribute<string> label : DialogType = "LabelText",
+			[' 0 ', '0    - 0.15', '0.15 - 0.30', '0.30 - 0.45', '0.45 - 0.60', '0.60 - 0.75', '0.75 - 0.90', '0.90 - 1.05', '> 1.05'];
+	}
+
+	unit<uint8> ratio9F: nrofrows = 8
+	{
+		attribute<ratio> ClassBreaks: DialogType = "Classification",
+			[0,0.40,0.55,0.65,0.70,0.75, 0.8,0.9];
+
+		attribute<uint32> BrushColor: DialogType = "BrushColor",
+			[
+				 rgb(255,255,204),rgb(255,255,128)
+				,rgb(255,230,102), rgb(255,179, 51),rgb(255,128,  0)
+				,rgb(255, 51,  0), rgb(230,  0,  0),rgb(153,  0,  0)
+			];
+
+		attribute<uint32> SymbolColor:= BrushColor, DialogType = "SymbolColor";
+
+		attribute<string> label : DialogType = "LabelText",
+			[ '0    - 0.40', '0.40 - 0.55', '0.55 - 0.65', '0.65 - 0.70', '0.70 - 0.75',  '0.75 - 0.80','0.80 - 0.90', '> 0.90'];
+	}
+
+		unit<uint8> example_for_size: nrofrows = 3 // Domain unit with three rows
+		{
+			attribute<nr_inh> ClassBreaks: [      0, 1000000  ,2000000];                                        // Set classbreaks at given intervals of inhabitants
+			attribute<string> label:       ['small', 'medium' ,'large'];                                        // Semantic labels
+			attribute<uint32> BrushColor:  [rgb(0,255,0),rgb(0,0,255),rgb(255,0,0)], DialogType = "BrushColor"; // Use colors: Green, Blue, Red
+		}
+		
+		unit<uint8> Uitkomstcats : nrofrows = 9
+	{
+		attribute<string> name  : [ 'geen', 'NOK', 'OK', 'geenNietWoon', 'Industrie', 'Klein', 
+		            'WelEPgeenVBO_U','BinnenNr','geenadr' ];
+		attribute<string> label := name, DialogType = "LabelText";
+
+        attribute<uint32>  SymbolColor :=  DialogType = "SymbolColor",
+		    [				rgb(255,0,0),rgb(0,0,255),rgb(0,255,0) ,rgb(255,0,255),rgb(0,255,255),rgb(128,128,128) 
+			               ,rgb(128,128,0),rgb(128,128,0) ,rgb(255,255,0)   ];
+		attribute<uint32> BrushColor := SymbolColor, DialogType = "BrushColor";			
+        attribute<float32> SymbolSize  := DialogType = "SymbolSize", [ 4.0,4.0,4.0, 4.0,4.0,4.0,4.0,4.0, 4.0]     ;
+        attribute<uint32>  Color := SymbolColor, DialogType = "BrushColor";
+
+
+        container V := for_each_nedv(name, 'value('+string(id(.))+', ..)', void, .);
+	}
+	
+
+		
+}
+
+	container Units // Definition of value units
+	{
+
+//    #include <Classifications.dms> 
+ 
+		unit<float32> nr_inh := baseunit('inhabitants', float32);
+		
+		unit<float64> m      := baseunit('meter', float64);
+		unit<float64> km     := 1000 * m;
+		unit<float64> m2     := m * m;
+
+	// no metric
+	unit<float32> ratio         := float32(range(1.0 * m2 / m2, 0.0, 1.0))	, cdf = "Classifications/ratio13L/ClassBreaks";
+	unit<float32> percent       := float32(100.0 * ratio);
+// , cdf = "Classifications/Percentage13K/ClassBreaks";
+
+		unit<float32> s      := baseunit('second', float32);
+		unit<float32> hr     := 3600 * s;
+
+		unit<float32> km_hr  := km / hr;
+	}
+
+//    #include<Geography.dms> 
+ 
+	container Geography // Define the extend of the scene and the projection 
+	{
+		unit<fpoint> rdc_base : format = "EPSG:28992", DialogData = "wmts_layer";               // Rijksdriehoekstelsel, a 2D cartesian coordinate system for the netherlands
+		unit<fpoint> rdc_meter      := range(rdc_base, point(0f, 300000f), point(280000f, 625000f)); // Define a 2D range consisting of 2D cartesian coordinates, later used for the "province" domain unit geometry attribute
+		unit<fpoint> rdc      := Geography/rdc_meter;
+
+		#include<wmts_layer.dms>                                                                // Tiles for background layer
+	}
+
+    container ColorExamples: Using = "Units" 
+	{
+	    unit<uint32> testgeo := range(uint32, 0, 9) {
+	          attribute<Geography/rdc> geometry  :=  point(float32( 5000 * id(testgeo)), float32(300000 +5000 * id(testgeo)),  Geography/rdc );
+			  attribute<Classifications/UitkomstCats> uitkomst :=  uint8(id(testgeo));
+		  }
+	
+	}
+
+	container SourceData: Using = "Units"
+	{
+
+      parameter<string> bagsrcfil := iif( config1/alleen_Ameland,"%ProjDir%/data/BAG_Ameland_20230101/BAG_Ameland_20230101.gpkg",
+	          "%ProjDir%/data/bag_snapshot_"+config1/BAGVERSION+"/snapshot_"+config1/BAGVERSION+".gpkg");
+
+
+	container bag_snapshot_result: 
+  StorageName     = "=bagsrcfil" // Path to shapefile (2D spatial dataset + N attributes)
+, StorageType     = "gdal.vect"
+, StorageReadOnly = "True"
+, SyncMode        = "allTables"
+, DialogData      = "geography/rdc";
+
+  
+
+   container CBS_2022
+   {
+      unit<uint32> gemeenten: StorageName = "%ProjDir%/data/WijkBuurtkaart_2022_v1/WijkBuurtkaart_2022_v1/gemeente_2022_v1.shp"
+      ,  StorageType     = "gdal.vect"
+      ,	 StorageReadOnly = "True"
+      {
+         attribute<Geography/rdc> geometry (polygon);
+		 // compatibility with GPKG names
+		 attribute<string> Gemeentenaam := GM_NAAM + iif(H2O =='NEE','','_water');
+		 attribute<string> GW_CODE := iif(H2O =='NEE',GM_CODE,replace(GM_CODE,"GM","GW") );
+      }
+	  
+
+      unit<uint32> wijk: StorageName = "%ProjDir%/data/WijkBuurtkaart_2022_v1/WijkBuurtkaart_2022_v1/wijk_2022_v1.shp"
+      ,  StorageType     = "gdal.vect"
+      ,  StorageReadOnly = "True"
+      {
+         attribute<Geography/rdc> geometry (polygon);
+      }
+
+      unit<uint32> buurt: StorageName = "%ProjDir%/data/WijkBuurtkaart_2022_v1/WijkBuurtkaart_2022_v1/buurt_2022_v1.shp"
+      ,  StorageType     = "gdal.vect"
+      ,  StorageReadOnly = "True"
+      {
+         attribute<Geography/rdc> geometry (polygon);
+      }
+   }
+   container CBS_2022_gpkg : StorageName = "%ProjDir%/data/WijkBuurtkaart_2022_v1/WijkBuurtkaart_2022_v1/wijkenbuurten_2022_v1.gpkg"
+         ,  StorageType     = "gdal.vect"
+   ,  StorageReadOnly = "True"
+   ,  SyncMode        = "AllTables"
+   ,  DialogData      = "Geography/rdc";
+   
+
+	}
+
+
+	container Make_gemfrompc4: Using = "Units"
+	{
+			
+			attribute<string> gempccombi (SourceData/CBS_2022/buurt) :=  iif (isnull(SourceData/CBS_2022/buurt/POSTCODE),
+                   "0000",SourceData/CBS_2022/buurt/POSTCODE)+" " + SourceData/CBS_2022/buurt/GM_CODE	+" " + SourceData/CBS_2022/buurt/GM_NAAM;
+			attribute<uint32>  gpcco_rel (SourceData/CBS_2022/buurt) := rlookup(gempccombi , combicnt1/Values) ;
+			unit<uint32> combicnt1 := unique(gempccombi) 			
+			{
+			    attribute<string>   val   := string( Values);	  
+				attribute<string>   pc := substr(val,0,4) ;
+				attribute<string>   GW_CODE := substr(val,5,6) ;
+				attribute<string>   gemeente := substr(val,12,9999) ;
+				attribute<uint32>   aantal  := pcount(gpcco_rel) ;
+            }
+			attribute<uint32>  pc4tab1_rel (combicnt1) := rlookup(combicnt1/pc , Gemfrompc4/Values) ;
+			
+			
+			unit<uint32> Gemfrompc4 :=  unique(combicnt1/pc) 
+			,   StorageName = "%ProjDir%/intermediate/gemfrompc4d.dbf"
+			, Descr = "and the output table, previously in csv"
+			{
+			    attribute<uint32>   maxidx  := max_index(combicnt1/aantal,pc4tab1_rel) ;
+				attribute<string>   Gemeentenaam := combicnt1/gemeente[maxidx ] ;
+				attribute<string>    GW_CODE := combicnt1/GW_CODE[maxidx ] ;
+				attribute<string>   Postcode4 := combicnt1/pc[maxidx ] ;
+			}
+
+            
+		    unit<uint32> gemeentekoppchkpc := unique(gemfrompc4/Gemeentenaam ) 
+			,    StorageName = "%ProjDir%/output/kchk-pc.dbf" 
+			, Descr = "test1: match CBS gemeentes with Gemfrompc4 "
+			{
+			    attribute<string>     gemeentenaamd   := string( Values);	  
+				attribute<uint32>     gem_geo_idx := rlookup(gemeentenaamd, SourceData/CBS_2022/gemeenten/Gemeentenaam);
+				attribute<Geography/rdc> geometry (polygon) := SourceData/CBS_2022/Gemeenten/geometry[gem_geo_idx];
+				attribute<ratio>  test         := float32(rnd_uniform(0, ., range(float32, 0f, 1f)));
+            }
+			
+			unit<uint32> gemeentekoppchkcbs :=  unique(SourceData/CBS_2022/gemeenten/Gemeentenaam ) 
+			,    StorageName = "%ProjDir%/output/kchk-cbs.dbf" 
+			,    Descr="test2, find Gemfrompc4 for CBS gemeentes"
+			{
+			    attribute<string>     gemeentenaamd   := string( Values);	  
+				attribute<uint32>     gem_pc4_idx := rlookup(gemeentenaamd, gemfrompc4/Gemeentenaam);
+				attribute<uint32>     gem_geo_idx := rlookup(gemeentenaamd, SourceData/CBS_2022/gemeenten/Gemeentenaam);
+				attribute<Geography/rdc> geometry (polygon) := SourceData/CBS_2022/Gemeenten/geometry[gem_geo_idx];
+				attribute<ratio>  test         := float32(rnd_uniform(0, ., range(float32, 0f, 1f)));
+            }
+
+    }
+	
+	container Results: Using = "Units"
+	{
+
+
+            unit<uint32> perpc6init := unique(i_land_dbf/GW_CODE)
+		           ,    StorageName = "=outfilename"  
+				     ,    StorageType = "gdalwrite.vect"					
+            {
+
+		container koppel1
+		{
+		    
+			parameter <int32> minopp := Int32( 100.0/2.1 ),
+			   Descr= "minimaal oppervlak om aan eis te voldoen, in m^2 :  wettelijke grens 100 m^3 gedeeld door wettelijke minimale hoogte"; 			
+			parameter <int32> maxopp := Int32( 800000 ),Descr= "hoogste valide oppervlak, hogere waarden lijken een soort van onbekend waarde";
+			parameter <int32> defopp := Int32( 1111 ),Descr= "waarde om in te vullen als oppervlak onbekend is (bijv. door te hoge waarden)";
+		  
+		    unit<uint32> selectforlab := SourceData/bag_snapshot_result/vbo
+				,    Descr="basis selectie uit vbos op utiliteit (niet woon, industrie) en oppervlak"
+                 {
+                    attribute<string> nummeraanduiding_id  := SourceData/bag_snapshot_result/vbo/nummeraanduiding_id[Nr_OrgEntity];
+                    attribute<Int32> oppervlakte   := iif( SourceData/bag_snapshot_result/vbo/oppervlakte[Nr_OrgEntity] > maxopp,
+					    defopp,   SourceData/bag_snapshot_result/vbo/oppervlakte[Nr_OrgEntity] );
+					attribute<Geography/rdc> geometry   := SourceData/bag_snapshot_result/vbo/geometry[Nr_OrgEntity];
+                 }
+
+           	 
+	        // koppeling vbo aan adresssen. Levert match op volledige nummeraanduiding
+		    attribute<UInt32> adres_idx_vbo (selectforlab ) := rlookup(selectforlab/nummeraanduiding_id,
+  			      SourceData/bag_snapshot_result/adres/nummeraanduiding_id );
+				  
+			attribute<string> adr_pcncmb  (SourceData/bag_snapshot_result/adres) := uppercase( SourceData/bag_snapshot_result/adres/postcode + 
+			 String(SourceData/bag_snapshot_result/adres/huisnummer) + SourceData/bag_snapshot_result/adres/Huisletter + "-" + SourceData/bag_snapshot_result/adres/toevoeging) ;
+			attribute<string> adr_pcncmbnr  (SourceData/bag_snapshot_result/adres) := ( SourceData/bag_snapshot_result/adres/postcode + 
+			 String(SourceData/bag_snapshot_result/adres/huisnummer) ) ;
+
+			// koppeling van EP naar adressen
+		    attribute<UInt32> adres_idx_ep (eputil) :=  rlookup(eputil/ep_pcncmb,  adr_pcncmb );
+
+		    unit<uint32> epnoaddr := subset( 
+			      IsNull( adres_idx_ep ) &&  
+				   ( eputil/ep_pcncmb!= "-" )  &&
+                  (  eputil/Pand_gebouwklasse == "U" ) )
+				  ,  StorageName = "%ProjDir%/output/epnoaddr.dbf"       
+                 {
+                    attribute<string> ep_pcncmb_res:= eputil/ep_pcncmb[Nr_OrgEntity];
+					attribute<UInt32> adres_idx_epnr  :=  rlookup(eputil/ep_pcncmbnr[Nr_OrgEntity],  adr_pcncmbnr );	
+                    attribute<string> Pand_energieklasse   := eputil/Pand_energieklasse[Nr_OrgEntity];
+					attribute<string> klaslet   := eputil/ep_klaslet[Nr_OrgEntity];
+					attribute<string> ep_pc4  := substr(ep_pcncmb_res,0,4);
+					attribute<float32> oppervlakte  := iif( IsNull(eputil/oppervlakte [Nr_OrgEntity]),float32(0),
+					                          (float32(eputil/oppervlakte [Nr_OrgEntity])) );
+			        attribute<string> ep_gemeente := rjoin(ep_pc4,
+			              Make_gemfrompc4/gemfrompc4/Postcode4,Make_gemfrompc4/gemfrompc4/Gemeentenaam  );
+					attribute<string> GW_CODE := rjoin(ep_pc4,
+			              Make_gemfrompc4/gemfrompc4/Postcode4,Make_gemfrompc4/gemfrompc4/GW_CODE );	  
+				    attribute<string> ep_straat :=  iif( IsNull(adres_idx_epnr ),"",  
+					         SourceData/bag_snapshot_result/adres/Straatnaam [adres_idx_epnr] );		
+				     attribute<Geography/rdc> geometry  := SourceData/bag_snapshot_result/adres/geometry [adres_idx_epnr ] ;	 
+					attribute<Classifications/UitkomstCats> uitkomst :=   const(Classifications/UitkomstCats/V/geenadr, .);				
+                 }		 
+
+            // eventueel restgroep matchen zonder toevoeging
+			
+			// aparte export WEL epo en adres , GEEN VBO record met U
+			// let op: dat kunnen ook adresen zijn met kleinere oppervlakten
+			// hier indien mogelijk vbo records met U toevoegen
+
+            attribute<UInt32> vbosel_idx_vbo (eputil ) := rlookup( eputil/ep_pcncmb, adr_pcncmb[adres_idx_vbo]);
+			attribute<UInt32> vbosel_idx_vbonr (eputil ) := rlookup( eputil/ep_pcncmbnr, adr_pcncmbnr[adres_idx_vbo]);
+		  
+		  
+		  		    unit<uint32> uitvalvbosel := subset( 
+			    ( SourceData/bag_snapshot_result/vbo/woon == False ) 	     )
+                 {
+                    attribute<string> nummeraanduiding_id  := SourceData/bag_snapshot_result/vbo/nummeraanduiding_id[Nr_OrgEntity];
+                    attribute<Int32> oppervlakte   := iif( SourceData/bag_snapshot_result/vbo/oppervlakte[Nr_OrgEntity] > maxopp,
+					    defopp,   SourceData/bag_snapshot_result/vbo/oppervlakte[Nr_OrgEntity] );
+					attribute<bool> industrie  := SourceData/bag_snapshot_result/vbo/industrie[Nr_OrgEntity];
+					attribute<Geography/rdc> geometry   := SourceData/bag_snapshot_result/vbo/geometry[Nr_OrgEntity];
+                 }
+	      
+		  // een uvbo record, gegeven een adres record
+		  // maar, omdat er meerdere adressen kunnen zijn, ook zonder vbo-u record 
+		  // moet daar eerst op gefilterd, anders te veel BinnenNr meldingen
+		  attribute<UInt32> adres_idx_uvbo (SourceData/bag_snapshot_result/adres ) := rlookup(
+  			      SourceData/bag_snapshot_result/adres/nummeraanduiding_id ,
+				  uitvalvbosel/nummeraanduiding_id );
+		  // Alternatieve methode: doe rlookup in adr_pcncmb[adres_idx_vbo]
+		  
+          unit<uint32> epnovbosel := subset( 
+			      IsNull( vbosel_idx_vbo) &&  
+				   ( eputil/ep_pcncmb!= "-" )  &&
+                  (  eputil/Pand_gebouwklasse == "U" ) )
+				  ,  StorageName = "%ProjDir%/output/epnoselvbo.dbf"       
+                 {
+                    attribute<string> ep_pcncmb_res:= eputil/ep_pcncmb[Nr_OrgEntity];
+					//attribute<UInt32> adres_idx_epnr  :=  rlookup(eputil/ep_pcncmbnr[Nr_OrgEntity],  eputil/ep_pcncmbnr  );	
+                    attribute<string> klaslet   := eputil/ep_klaslet[Nr_OrgEntity];
+					attribute<float32> ep_opp   := iif( IsNull(eputil/oppervlakte[Nr_OrgEntity]) ,float32(0),
+					    eputil/oppervlakte[Nr_OrgEntity]);
+					attribute<string> ep_pc4  := substr(ep_pcncmb_res,0,4);
+			        attribute<string> ep_gemeente := rjoin(ep_pc4,
+			              Make_gemfrompc4/gemfrompc4/Postcode4,Make_gemfrompc4/gemfrompc4/Gemeentenaam  );
+					attribute<string> GW_CODE := rjoin(ep_pc4,
+			              Make_gemfrompc4/gemfrompc4/Postcode4,Make_gemfrompc4/gemfrompc4/GW_CODE );	  
+				    attribute<UInt32> bag_adres_idx := adres_idx_ep [Nr_OrgEntity];
+				    attribute<UInt32> uvbo_idx := adres_idx_uvbo[bag_adres_idx];
+					attribute<string> ep_straat :=  
+					         iif( IsNull(bag_adres_idx) ,"", SourceData/bag_snapshot_result/adres/Straatnaam [bag_adres_idx]);
+					attribute<int32> vbo_opp   := iif( IsNull(uvbo_idx) ,Int32(ep_opp),
+					    uitvalvbosel/oppervlakte [uvbo_idx] );
+
+					attribute<Geography/rdc> geometry  :=  iif( IsNull(uvbo_idx) || True  ,	
+                          				
+						     SourceData/bag_snapshot_result/adres/geometry [bag_adres_idx]  ,
+						  uitvalvbosel/geometry	[uvbo_idx])   ;
+
+					attribute<bool> industrie   := uitvalvbosel/industrie [uvbo_idx];
+					attribute<Classifications/UitkomstCats> uitkomst :=  iif( IsNull(uvbo_idx),
+					   iif(IsNull(vbosel_idx_vbonr[Nr_OrgEntity]),
+		                  const(Classifications/UitkomstCats/V/geenNietWoon, .), 
+			              const(Classifications/UitkomstCats/V/BinnenNr, .)),
+			   iif( industrie , const(Classifications/UitkomstCats/V/Industrie, .),
+			      iif( vbo_opp >=  minopp , const(Classifications/UitkomstCats/V/WelEPgeenVBO_U, .),
+			      const(Classifications/UitkomstCats/V/Klein, .) ) )) ;
+                 }	
+
+        container select2 {
+            // en nu de echte output
+            attribute<UInt32> ep_idx_vbo (selectforlab ) := rlookup(adr_pcncmb[adres_idx_vbo], eputil/ep_pcncmb  );
+			attribute<UInt32> ep_idx_vbonr (selectforlab ) := rlookup(adr_pcncmbnr[adres_idx_vbo], eputil/ep_pcncmbnr );
+			attribute<string> klaslet (selectforlab ) := eputil/ep_klaslet [ep_idx_vbo];
+			attribute<string> ep_pcncmb (selectforlab ) := adr_pcncmb [adres_idx_vbo];
+			
+			attribute<string> Straatnaam (selectforlab ) := SourceData/bag_snapshot_result/adres/Straatnaam [adres_idx_vbo];
+			attribute<string> pc4 (selectforlab ) := substr(ep_pcncmb,0,4);
+			attribute<string> gemeente (selectforlab ) := rjoin(pc4,
+			    Make_gemfrompc4/gemfrompc4/Postcode4,Make_gemfrompc4/gemfrompc4/Gemeentenaam  );
+			attribute<string> GW_CODE (selectforlab ) := rjoin(pc4,
+			    Make_gemfrompc4/gemfrompc4/Postcode4,Make_gemfrompc4/gemfrompc4/GW_CODE );
+		}
+			
+			// code maken dat oude dbf eerst gewist wordt
+
+	  unit<uint32> i_land_dbf  := selectforlab
+	       ,    StorageName = "%ProjDir%/output/outp2land.dbf"  
+	    {
+         attribute<string> pcncmb  :=select2/ep_pcncmb;		 
+		 attribute<string> klaslet   := makedefined(select2/klaslet," ") ;
+         attribute<string> gemeente   := select2/gemeente ;
+		 attribute<string> GW_CODE   := select2/GW_CODE   ;
+		 attribute<string> straat   := select2/Straatnaam ;
+		 attribute<float32> ep_opp  := iif( IsNull(eputil/oppervlakte[Select2/ep_idx_vbo] ) ,float32(0),
+					    eputil/oppervlakte[Select2/ep_idx_vbo] );
+		 
+		 attribute<int32> vbo_opp   := selectforlab/oppervlakte ;
+// storing geometry does not work		 , DisableStorage ="True" 
+		 attribute<Geography/rdc> vbo_geometry   := selectforlab/geometry
+		   ,    StorageName = "%ProjDir%/output/outp2landvbo.shp" ;
+		 attribute<Geography/rdc> geometry   := SourceData/bag_snapshot_result/adres/geometry[adres_idx_vbo]
+		    ,    StorageName = "%ProjDir%/output/outp2land.shp" ;
+		 attribute<Classifications/Uitkomstcats> uitkomst :=  iif( IsNull(Select2/ep_idx_vbo),
+		       iif( IsNull(Select2/ep_idx_vbonr),
+			   const(Classifications/Uitkomstcats/V/geen, .), 
+			   const(Classifications/Uitkomstcats/V/BinnenNr, . ) ), 
+			   iif( klaslet <= "C" , const(Classifications/Uitkomstcats/V/OK, .),
+			      const(Classifications/Uitkomstcats/V/NOK, .) )) ;
+        } 
+
+	  unit<uint32> outgeodbf  := union_unit(i_land_dbf,epnovbosel,epnoaddr  )
+	       ,    StorageName = "%ProjDir%/output/outp2geo.shp"  
+           ,    StorageType = "gdalwrite.vect"	 
+      {
+			  // write gda1write schrijft database niet weg, shp onder dbf geen geo data
+             attribute<string> pcncmb := union_data(., i_land_dbf/pcncmb,epnovbosel/ep_pcncmb_res,epnoaddr/ep_pcncmb_res );
+			 attribute<string> gemeente := union_data(., i_land_dbf/gemeente,epnovbosel/ep_gemeente,epnoaddr/ep_gemeente );
+			 attribute<string> GW_CODE := union_data(., i_land_dbf/GW_CODE ,epnovbosel/GW_CODE ,epnoaddr/GW_CODE );
+			 attribute<string> straat := union_data(., i_land_dbf/straat,epnovbosel/ep_straat,epnoaddr/ep_straat );
+			 attribute<string> nrtoev := replace(substr(pcncmb,6,99),"-"," ");
+			 attribute<string> klaslet := union_data(., i_land_dbf/klaslet,epnovbosel/klaslet,epnoaddr/klaslet );
+			 attribute<float32> ep_opp := union_data(., i_land_dbf/ep_opp,epnovbosel/ep_opp,epnoaddr/oppervlakte );
+			 attribute<Int32> vbo_opp := union_data(., i_land_dbf/vbo_opp,epnovbosel/vbo_opp,int32(epnoaddr/oppervlakte) );			 
+			 attribute<Classifications/Uitkomstcats> uitkomst := union_data(., i_land_dbf/uitkomst,epnovbosel/uitkomst,epnoaddr/uitkomst ) ;
+	  }		 
+			       
+            container dlopppct := for_each_nedv(classifications/Uitkomstcats/name,  
+				'float32( sum( iif(uint32(i_land_dbf/uitkomst) == '+string(id(classifications/Uitkomstcats))+' , i_land_dbf/vbo_opp,Int32(0)),gem_rel) ) / float32(pergemeentecatd/oppervl) '
+				, pergemeentecatd , float32), DisableStorage ="True" ;
+				
+			
+			attribute<uint32>  gem_rel (i_land_dbf) := rlookup(i_land_dbf/GW_CODE, pergemeentecatd/Values) ;
+			parameter <string> outfilename :="%ProjDir%/output/pergemeented_"+Config1/EPCVERSION+".shp" ;
+
+			unit<uint32> pergemeentecatd := unique(i_land_dbf/GW_CODE)
+		           ,    StorageName = "=outfilename"  
+				     ,    StorageType = "gdalwrite.vect"					
+            {
+                attribute<string>     GW_CODE   := string( Values);	  
+				attribute<uint32>     gem_geo_idx := rlookup(GW_CODE, SourceData/CBS_2022/gemeenten/GW_CODE);
+				attribute<int32>      oppervl   := sum(i_land_dbf/vbo_opp,gem_rel) ;
+				attribute<string>     gemeente  := first(i_land_dbf/gemeente,gem_rel) ;	
+				attribute<int32>      epsrcdat 	:= const(SourceData/epsrcdat,.);	
+
+				attribute<Geography/rdc> geometry (polygon) := SourceData/CBS_2022/Gemeenten/geometry[gem_geo_idx];				  
+				
+                attribute<ratio>   R_geen    :=  dlopppct/geen;
+				attribute<ratio>   R_NOK    :=  dlopppct/NOK;
+				attribute<ratio>   R_OK    :=  dlopppct/OK;   
+				attribute<ratio>   R_niett    :=  dlopppct/geenNietWoon + dlopppct/Industrie + dlopppct/Klein;    
+				attribute<ratio>   R_uitz    :=  dlopppct/WelEPgeenVBO_U + dlopppct/BinnenNr + dlopppct/geenadr;	
+				
+				//attribute<float32>   D_geen    :=  float32( sum( iif(uint32(i_land_dbf/uitkomst) == 
+				//           uint32(const(Classifications/Uitkomstcats/V/geen, .))  , i_land_dbf/vbo_opp,Int32(0)),gem_rel) ) / float32(oppervlakte);
+				//attribute<float32>   D_NOK    :=  float32( sum( iif(i_land_dbf/uitkomst == 
+				//           const(Classifications/Uitkomstcats/V/NOK, .)  , i_land_dbf/vbo_opp,Int32(0)),gem_rel) ) / float32(oppervlakte);
+				//attribute<float32>   D_OK    :=  dlopppct/OK;   				
+ 
+            }
+
+
+		}
+	
+
+		
+	}
+}
